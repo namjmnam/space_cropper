@@ -20,12 +20,14 @@ def load_csv():
 df = load_csv()
 df.columns = ['I', 'P']
 
+size_x = 50
+size_y = 50
+
 # plot_coord(df, 50, 50, -150, 50)
-df_coords = plot_coord(df, 50, 50)
+df_coords = plot_coord(df, size_x, size_y)
 
 # Cropping all zero's
 df_coords[['x', 'y', 'z']] = pd.DataFrame(df_coords['coord'].tolist(), index=df_coords.index)
-# df_coords['z'] = 0
 df_cropped = df_coords[['x', 'y', 'z']]
 
 df_cropped = df_cropped.drop_duplicates()
@@ -36,7 +38,7 @@ y_min = df_cropped['y'].min()
 df_cropped['x'] = df_cropped['x'] - x_min
 df_cropped['y'] = df_cropped['y'] - y_min
 
-print(df_cropped)
+# print(df_cropped)
 x_max = df_cropped['x'].max()
 x_min = df_cropped['x'].min()
 y_max = df_cropped['y'].max()
@@ -44,14 +46,24 @@ y_min = df_cropped['y'].min()
 z_max = df_cropped['z'].max()
 z_min = df_cropped['z'].min()
 
-print(x_min, x_max, y_min, y_max, z_min, z_max)
+# print(x_min, x_max, y_min, y_max, z_min, z_max)
 
 df_re_indexed, nx, ny, nz = to_index(df_cropped, 1, x_min, x_max, y_min, y_max, z_min, z_max)
-print(df_re_indexed)
+# print(df_re_indexed)
 
-_ = plot_coord(df_re_indexed, x_max+1, y_max+1)
-
-# print(df_coords[['x', 'y', 'z']])
-# to_xlsx(df, 50, 50)
+# _ = plot_coord(df_re_indexed, x_max+1, y_max+1)
 
 to_xlsx(df_re_indexed, x_max+1, y_max+1)
+# Done!
+
+
+# Uncropped
+df_uncropped = df_coords[['x', 'y', 'z']]
+df_uncropped['z'] = 0
+df_uncropped = df_uncropped.drop_duplicates()
+df_uncropped = df_uncropped.reset_index(drop=True)
+z_max = df_uncropped['z'].max()
+z_min = df_uncropped['z'].min()
+df_re, nx, ny, nz = to_index(df_uncropped, 1, 0, size_x-1, 0, size_y-1, 0, z_max)
+
+to_xlsx(df_re, size_x, size_y)
