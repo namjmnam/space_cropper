@@ -21,6 +21,19 @@ df.columns = ['I', 'P']
 
 # plot_coord(df, 50, 50, -150, 50)
 df_coords = plot_coord(df, 50, 50)
-print(df_coords['coord'])
+df_coords[['x', 'y', 'z']] = pd.DataFrame(df_coords['coord'].tolist(), index=df_coords.index)
+df_coords['z'] = 0
+df_cropped = df_coords[['x', 'y']]
 
-to_xlsx(df, 50, 50)
+df_cropped = df_cropped.drop_duplicates()
+df_cropped = df_cropped.reset_index(drop=True)
+
+print(df_cropped)
+print(df_cropped['x'].max())
+print(df_cropped['x'].min())
+print(df_cropped['y'].max())
+print(df_cropped['y'].min())
+
+# print(df_coords[['x', 'y', 'z']])
+# to_xlsx(df, 50, 50)
+
