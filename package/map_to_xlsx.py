@@ -2,7 +2,7 @@ import pandas as pd
 from tkinter import filedialog
 import os
 
-def to_xlsx(merged_df, nx, ny, floor=1):
+def to_xlsx(merged_df, nx, ny, floor=1, filename_suffix='_flat'):
     # Get the script directory
     script_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -26,15 +26,12 @@ def to_xlsx(merged_df, nx, ny, floor=1):
     # 데이터프레임의 행 순서를 뒤집음 (상하반전)
     reshaped_df = reshaped_df.iloc[::-1]
 
-    # Get the script directory
-    # script_directory = os.path.dirname(os.path.abspath(__file__))
-
     try:
         # Open a file dialog to choose file path and name
         file_path = filedialog.asksaveasfilename(defaultextension='.xlsx',
                                                 filetypes=[('XLSX files', '*.xlsx')],
                                                 title='Save map file as',
-                                                initialfile=f'output_map_{nx}x{ny}',
+                                                initialfile=f'output_map_{nx}x{ny}{filename_suffix}',
                                                 initialdir=script_directory+'/../output')
 
         # Pandas Excel 작성기 생성 (XlsxWriter 엔진 사용)

@@ -46,9 +46,18 @@ y_min = df_cropped['y'].min()
 z_max = df_cropped['z'].max()
 z_min = df_cropped['z'].min()
 
+# Save cropped data
+df_for_save, nx, ny, nz = to_index(df_cropped, 1, x_min, x_max, y_min, y_max)
+df_cropped.to_csv(script_directory+'/output/'+'cropped_coords.csv', index=False)
+df_for_save.to_csv(script_directory+'/output/'+f'cropped_index_{nx}x{ny}.csv', index=False)
+
 # print(x_min, x_max, y_min, y_max, z_min, z_max)
 
-df_re_indexed, nx, ny, nz = to_index(df_cropped, 1, x_min, x_max, y_min, y_max, z_min, z_max)
+# Is the map flat with no floors?
+map_is_flat = True
+if map_is_flat: df_cropped['z'] = 0
+
+df_re_indexed, nx, ny, nz = to_index(df_cropped, 1, x_min, x_max, y_min, y_max)
 # print(df_re_indexed)
 
 # _ = plot_coord(df_re_indexed, x_max+1, y_max+1)
@@ -59,11 +68,11 @@ to_xlsx(df_re_indexed, x_max+1, y_max+1)
 
 # Uncropped
 df_uncropped = df_coords[['x', 'y', 'z']]
-df_uncropped['z'] = 0
+if map_is_flat: df_uncropped['z'] = 0
 df_uncropped = df_uncropped.drop_duplicates()
 df_uncropped = df_uncropped.reset_index(drop=True)
 z_max = df_uncropped['z'].max()
 z_min = df_uncropped['z'].min()
-df_re, nx, ny, nz = to_index(df_uncropped, 1, 0, size_x-1, 0, size_y-1, 0, z_max)
+df_re, nx, ny, nz = to_index(df_uncropped, 1, 0, size_x-1, 0, size_y-1, z_min, z_max)
 
 to_xlsx(df_re, size_x, size_y)
