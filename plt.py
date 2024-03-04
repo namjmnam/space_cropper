@@ -49,7 +49,7 @@ z_min = df_cropped['z'].min()
 # Save cropped data
 df_for_save, nx, ny, nz = to_index(df_cropped, 1, x_min, x_max, y_min, y_max)
 df_cropped.to_csv(script_directory+'/output/'+'cropped_coords.csv', index=False)
-df_for_save.to_csv(script_directory+'/output/'+f'cropped_index_{nx}x{ny}.csv', index=False)
+df_for_save.to_csv(script_directory+'/output/'+f'cropped_index_{nx}x{ny}x{nz}.csv', index=False)
 
 # print(x_min, x_max, y_min, y_max, z_min, z_max)
 
