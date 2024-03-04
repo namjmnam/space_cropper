@@ -12,6 +12,25 @@ x = data(:, 1); % Extracts the first column
 y = data(:, 2); % Extracts the second column
 z = data(:, 3); % Extracts the third column
 
+% Added a layer of 0 values
+% Determine the full range of x and y values
+minX = min(x);
+maxX = max(x);
+minY = min(y);
+maxY = max(y);
+% Generate all combinations of x and y within their range
+[Xgrid, Ygrid] = meshgrid(minX:maxX, minY:maxY);
+Xgrid = Xgrid(:);
+Ygrid = Ygrid(:);
+Zgrid = zeros(size(Xgrid)); % Initialize Z values to 0
+% Combine the new (x, y, 0) pairs with the original data
+newData = [Xgrid, Ygrid, Zgrid];
+combinedData = [data; newData];
+x = combinedData(:, 1);
+y = combinedData(:, 2);
+z = combinedData(:, 3);
+
+% Fitting the scale
 x = x*full_size_x/x_max;
 y = y*full_size_y/y_max;
 z = z*full_size_z/z_max;
@@ -51,6 +70,22 @@ z = z*full_size_z/z_max;
 % zlabel('z');
 % title('3D Scatter Plot Showing Multiple z Values for Each (x, y)');
 % colorbar; % Adds a color bar to interpret the colors
+
+% Create zero layer
+% % Step 1: Create a full grid of (x, y) pairs
+% [xq, yq] = meshgrid(linspace(min(x), max(x), 100), linspace(min(y), max(y), 100));
+% % Step 2: Initialize zq with zeros (or another placeholder value)
+% zq = zeros(size(xq));
+% % Step 3: Overlay actual aggregated data on top of the placeholder grid
+% % First, find unique (x, y) pairs and calculate aggregatedZ as before
+% uniqueXY = unique([x, y], 'rows');
+% aggregatedZ = arrayfun(@(i) mean(z(all([x, y] == uniqueXY(i,:), 2))), 1:size(uniqueXY, 1));
+% % Then, use griddata to interpolate only for these unique (x, y) pairs
+% % This will overwrite the placeholder values in zq with actual data where available
+% zq = griddata(uniqueXY(:,1), uniqueXY(:,2), aggregatedZ, xq, yq, 'linear', NaN);
+% % Plotting
+% contourf(xq, yq, zq); % Creates a filled contour plot
+% colorbar; % Shows the scale of values
 
 % Contour with average
 uniqueXY = unique([x, y], 'rows'); % Find unique (x, y) pairs
